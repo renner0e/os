@@ -1,0 +1,59 @@
+package:
+  name: qt6-qtdeclarative.yaml
+  version: "6.9.1"
+  epoch: 0
+  description: qt6-qtdeclarative
+  copyright:
+    - license: LGPL-3.0-or-later
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - cmake
+      - qt6-qtbase-dev
+      - qt6-qtshadertools-dev
+      - libxkbcommon-dev
+      - mesa-dev
+      - python3-dev
+
+
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 1e6adc3d5f1f4cbbb77b41911395782dff43cccd
+      repository: https://code.qt.io/qt/qtdeclarative.git
+      tag: v${{package.version}}
+
+  - uses: cmake/configure
+
+  - uses: cmake/build
+
+  - uses: cmake/install
+
+  - uses: strip
+
+update:
+  enabled: true
+  git:
+    strip-prefix: v
+  ignore-regex-patterns:
+    - 'rc\d+$'
+    - 'beta\d+$'
+
+subpackages:
+  - name: ${{package.name}}-dev
+    description: ${{package.name}} development libraries and headers
+    pipeline:
+      - uses: split/dev
+    test:
+      pipeline:
+        - uses: test/tw/ldd-check
+        - uses: test/pkgconf
+
+test:
+  pipeline:
+    - uses: test/tw/ldd-check
+    - uses: test/pkgconf
+
