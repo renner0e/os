@@ -36,7 +36,9 @@ update:
   enabled: true
   git:
     strip-prefix: v
-
+    ignore-regex-patterns:
+      - 'rc\d+$'
+      - 'beta\d+$'
 
 subpackages:
   - name: ${{package.name}}-dev
