@@ -48,3 +48,7 @@ subpackages:
         - uses: test/tw/ldd-check
         - uses: test/pkgconf
 
+test:
+  pipeline:
+    - uses: test/tw/ldd-check
+    - uses: test/pkgconf
