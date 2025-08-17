@@ -19,9 +19,9 @@ environment:
 pipeline:
   - uses: git-checkout
     with:
-      expected-commit: 661130571df1a19bd10dd7705fe689cfde835dad
-      repository: https://code.qt.io/qt/qtshadertools.git
+      repository: https://github.com/qt/qtshadertools
       tag: v${{package.version}}
+      expected-commit: 661130571df1a19bd10dd7705fe689cfde835dad
 
 
   - uses: cmake/configure
@@ -34,11 +34,13 @@ pipeline:
 
 update:
   enabled: true
-  git:
+  github:
+    identifier: qt/qtshadertools
+    use-tag: true
     strip-prefix: v
-    ignore-regex-patterns:
-      - 'rc\d+$'
-      - 'beta\d+$'
+  ignore-regex-patterns:
+    - 'rc\d+$'
+    - 'beta\d+$'
 
 subpackages:
   - name: ${{package.name}}-dev
