@@ -13,7 +13,6 @@ environment:
       - busybox
       - cmake
       - libglvnd-dev
-      - python3-dev
       - qt6-qtbase-dev
       - libxkbcommon-dev
 
