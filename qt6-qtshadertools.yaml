@@ -1,0 +1,73 @@
+package:
+  name: qt6-qtshadertools
+  version: "6.9.1"
+  epoch: 0
+  description: Qt6 - Qt Shader Tools module builds on the SPIR-V Open Source Ecosystem
+  copyright:
+    - license: LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - clang
+      - cmake
+      - ninja
+      - libglvnd-dev
+      - python3-dev
+      - qt6-qtbase-dev
+      - libxkbcommon-dev
+
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 661130571df1a19bd10dd7705fe689cfde835dad
+      repository: https://code.qt.io/qt/qtshadertools.git
+      tag: v${{package.version}}
+
+  - runs: |
+      export CC=clang
+      export CXX=clang++
+      export CMAKE_CXX_COMPILER=clang++
+
+      cmake -B build -G Ninja -Wno-dev \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+        -DINSTALL_BINDIR=lib/qt6/bin \
+        -DINSTALL_PUBLICBINDIR=usr/bin \
+        -DINSTALL_DOCDIR=share/doc/qt6 \
+        -DINSTALL_ARCHDATADIR=lib/qt6 \
+        -DINSTALL_DATADIR=share/qt6 \
+        -DINSTALL_INCLUDEDIR=include/qt6 \
+        -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \
+        -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -DQT_FEATURE_journald=OFF \
+        -DQT_BUILD_EXAMPLES=OFF \
+        -DQT_BUILD_TESTS=OFF
+
+      cmake --build build
+      DESTDIR="${{targets.destdir}}" cmake --install build
+
+  - uses: strip
+
+update:
+  enabled: true
+  git:
+    strip-prefix: v
+
+
+subpackages:
+  - name: ${{package.name}}-dev
+    description: ${{package.name}} development libraries and headers
+    pipeline:
+      - uses: split/dev
+    test:
+      pipeline:
+        - uses: test/tw/ldd-check
+        - uses: test/pkgconf
+
