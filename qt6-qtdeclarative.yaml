@@ -1,10 +1,13 @@
 package:
-  name: qt6-qtdeclarative.yaml
+  name: qt6-qtdeclarative
   version: "6.9.1"
   epoch: 0
   description: qt6-qtdeclarative
   copyright:
     - license: LGPL-3.0-or-later
+
+vars:
+  llvm-vers: 19
 
 environment:
   contents:
@@ -12,32 +15,70 @@ environment:
       - build-base
       - busybox
       - cmake
+      - ninja
       - qt6-qtbase-dev
       - qt6-qtshadertools-dev
       - libxkbcommon-dev
       - mesa-dev
       - python3-dev
 
+      - clang-${{vars.llvm-vers}}
+      - clang-${{vars.llvm-vers}}-extras
+      - llvm-${{vars.llvm-vers}}
+      - llvm-${{vars.llvm-vers}}-dev
+
+var-transforms:
+  - from: ${{package.version}}
+    match: "_"
+    replace: "-"
+    to: mangled-package-version
 
 pipeline:
   - uses: git-checkout
     with:
+      repository: https://github.com/qt/qtdeclarative.git
+      tag: v${{vars.mangled-package-version}}
       expected-commit: 1e6adc3d5f1f4cbbb77b41911395782dff43cccd
-      repository: https://code.qt.io/qt/qtdeclarative.git
-      tag: v${{package.version}}
 
-  - uses: cmake/configure
+#  - uses: cmake/configure
+#
+#  - uses: cmake/build
+#
+#  - uses: cmake/install
 
-  - uses: cmake/build
+  - runs: |
+      ln -s /usr/lib/llvm-19/lib/LLVMgold.so /usr/lib/ # I cannot convince ld to find this here
+      # Needed to find our llvm libs
+      export CXXFLAGS="$CXXFLAGS -I/usr/lib/llvm-${{vars.llvm-vers}}/include"
+      export CC=clang
+      export CXX=clang++
 
-  - uses: cmake/install
+      cmake -B build -G Ninja -Wno-dev \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+        -DINSTALL_BINDIR=lib/qt6/bin \
+        -DINSTALL_PUBLICBINDIR=usr/bin \
+        -DINSTALL_DOCDIR=share/doc/qt6 \
+        -DINSTALL_ARCHDATADIR=lib/qt6 \
+        -DINSTALL_DATADIR=share/qt6 \
+        -DINSTALL_INCLUDEDIR=include/qt6 \
+        -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \
+        -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
+        -DQT_FEATURE_journald=OFF \
+        -DQT_FEATURE_reduce_relocations=OFF
+
+      cmake --build build
+      DESTDIR="${{targets.destdir}}" cmake --install build
 
   - uses: strip
 
 update:
   enabled: true
-  git:
+  github:
+    identifier: qt/qtdeclarative
     strip-prefix: v
+    use-tag: true
   ignore-regex-patterns:
     - 'rc\d+$'
     - 'beta\d+$'
