@@ -14,13 +14,18 @@ environment:
       - cmake
       - qt6-qtbase-dev
 
+var-transforms:
+  - from: ${{package.version}}
+    match: "_"
+    replace: "-"
+    to: mangled-package-version
+
 pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qtlanguageserver
       tag: v${{package.version}}
       expected-commit: d02a0dbc958d2380f97717b81166b8faf32e16a1
-
 
   - uses: cmake/configure
 
