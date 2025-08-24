@@ -1,0 +1,59 @@
+package:
+  name: kwin
+  version: "6.4.4"
+  epoch: 0
+  description: KDE Wayland Compositor
+  copyright:
+    - license: BSD-2-Clause AND BSD-3-Clause AND CC0-1.0 AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-3.0-only AND GPL-3.0-or-later AND LGPL-2.0-only AND LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND LGPL-3.0-only AND (GPL-2.0-only OR GPL-3.0-only) AND (LGPL-2.1-only OR LGPL-3.0-only) AND MIT
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - cmake
+      - extra-cmake-modules
+      - qt6-qtbase-dev
+      - qt6-qtshadertools-dev
+      - qt6-qtdeclarative-dev
+      - qt6-qt5compat-dev
+      - libglvnd-dev
+      - qt6-qttools-dev
+      - qt6-qtwayland-dev
+      - wayland-dev
+      - wayland-protocols
+      - qt6-qtsensors-dev
+      - qt6-qtsvg-dev
+
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: b54c0832f3381a7c67274d430cb9fac3fa6126e8
+      repository: https://invent.kde.org/plasma/kwin
+      tag: v${{package.version}}
+
+  - uses: cmake/configure
+    with:
+      opts: |
+        -DECM_DIR=/usr/share/ECM/
+
+  - uses: cmake/build
+
+  - uses: cmake/install
+
+  - uses: strip
+
+update:
+  enabled: true
+  git:
+    strip-prefix: v
+
+subpackages:
+  - name: ${{package.name}}-dev
+    description: ${{package.name}} development libraries and headers
+
+test:
+  pipeline:
+    - runs: |
+        kwin --version
+
