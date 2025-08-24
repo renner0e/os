@@ -28,7 +28,7 @@ pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qtwayland
-      tag: v${{package.version}}
+      tag: v${{vars.mangled-package-version}}
       expected-commit: b54d446eb64ef23a5e365d5b6ff6116c3a5b6051
 
   - uses: cmake/configure

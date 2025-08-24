@@ -28,7 +28,7 @@ pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qtsensors
-      tag: v${{package.version}}
+      tag: v${{vars.mangled-package-version}}
       expected-commit: ca75c684e7e96081114e82e88109f2528b51be31
 
   - uses: cmake/configure

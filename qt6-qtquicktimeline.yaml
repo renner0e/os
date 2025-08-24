@@ -27,7 +27,7 @@ pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qtquicktimeline
-      tag: v${{package.version}}
+      tag: v${{vars.mangled-package-version}}
       expected-commit: 410381aa0b4d3f810a4c3d737c15315010ad9831
 
   - uses: cmake/configure

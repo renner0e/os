@@ -26,7 +26,7 @@ pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qtshadertools
-      tag: v${{package.version}}
+      tag: v${{vars.mangled-package-version}}
       expected-commit: 661130571df1a19bd10dd7705fe689cfde835dad
 
   - uses: cmake/configure

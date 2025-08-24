@@ -26,7 +26,7 @@ pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qtsvg
-      tag: v${{package.version}}
+      tag: v${{vars.mangled-package-version}}
       expected-commit: eac4588150968e3cdfcee06a4ccfa5aec4c4b938
 
   - uses: cmake/configure

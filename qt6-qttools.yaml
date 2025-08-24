@@ -27,7 +27,7 @@ pipeline:
   - uses: git-checkout
     with:
       repository: https://github.com/qt/qttools
-      tag: v${{package.version}}
+      tag: v${{vars.mangled-package-version}}
       expected-commit: 9e8f157b49c78c05abf8fa87da21e04cdf09780c
       recurse-submodules: true # we need qlitehtml
 
