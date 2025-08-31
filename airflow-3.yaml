@@ -1,6 +1,6 @@
 package:
   name: airflow-3
-  version: "3.0.5"
+  version: "3.0.6"
   epoch: 0
   description: Platform to programmatically author, schedule, and monitor workflows
   options:
@@ -83,7 +83,7 @@ pipeline:
     with:
       repository: https://github.com/apache/airflow
       tag: ${{package.version}}
-      expected-commit: c8f60cc2f1cd8064ea1806bde1ed6726191c60d5
+      expected-commit: e965c2e676d85ced65a485d4b2601addc2fd3e97
 
   - uses: patch
     with:
@@ -122,6 +122,9 @@ pipeline:
 
       # GHSA-2c2j-9gv5-cj73
       uv pip install --verbose --upgrade --prefix=${{targets.contextdir}}/opt/airflow starlette==0.47.2
+
+      # GHSA-847f-9342-265h
+      uv pip install --verbose --upgrade --prefix=${{targets.contextdir}}/opt/airflow h2==4.3.0
 
   - name: "Build and install the additional provider packages"
     runs: |

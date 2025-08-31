@@ -1,6 +1,6 @@
 package:
   name: harfbuzz
-  version: "11.4.3"
+  version: "11.4.5"
   epoch: 0
   description: Text shaping library
   copyright:
@@ -30,7 +30,7 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 6660415ad48fa1a46e4fa75fcdb70ff819c452153f08677d34ffb29eda66415d
+      expected-sha256: 0f052eb4ab01d8bae98ba971c954becb32be57d7250f18af343b1d27892e03fa
       uri: https://github.com/harfbuzz/harfbuzz/releases/download/${{package.version}}/harfbuzz-${{package.version}}.tar.xz
 
   # oldglibc has redundant declarations, which is harmless

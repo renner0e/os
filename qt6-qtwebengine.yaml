@@ -1,0 +1,71 @@
+package:
+  name: qt6-qtwebengine
+  version: "6.9.1"
+  epoch: 0
+  description: qtwebengine
+  copyright:
+    - license: LGPL-3.0-or-later
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - cmake
+      - libglvnd-dev
+      - qt6-qtbase-dev
+     # - libxkbcommon-dev
+     # - qt6-qtdeclarative-dev
+     # - qt6-qtconnectivity-dev
+      - libpng-dev
+      - tiff-dev
+      - re2-dev
+      - icu-dev
+      - opus-dev
+      - libva-dev
+
+var-transforms:
+  - from: ${{package.version}}
+    match: "_"
+    replace: "-"
+    to: mangled-package-version
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/qt/qtwebengine
+      tag: v${{vars.mangled-package-version}}
+      expected-commit: d0012809afa1ca30210948d281f48fbc7160fc0c
+
+  - uses: cmake/configure
+
+  - uses: cmake/build
+
+  - uses: cmake/install
+
+  - uses: strip
+
+update:
+  enabled: true
+  github:
+    identifier: qt/qtwebengine
+    use-tag: true
+    strip-prefix: v
+  ignore-regex-patterns:
+    - 'rc\d+$'
+    - 'beta\d+$'
+
+subpackages:
+  - name: ${{package.name}}-dev
+    description: ${{package.name}} development libraries and headers
+    pipeline:
+      - uses: split/dev
+    test:
+      pipeline:
+        - uses: test/tw/ldd-check
+        - uses: test/pkgconf
+
+test:
+  pipeline:
+    - uses: test/tw/ldd-check
+    - uses: test/pkgconf
