@@ -1,0 +1,65 @@
+package:
+  name: qt6-qtremoteobjects
+  version: "6.9.1"
+  epoch: 0
+  description: qtremoteobjects
+  copyright:
+    - license: LGPL-3.0-or-later
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - cmake
+      - libglvnd-dev
+      - qt6-qtbase-dev
+      - libxkbcommon-dev
+      - qt6-qtdeclarative-dev
+      - qt6-qtconnectivity-dev
+
+var-transforms:
+  - from: ${{package.version}}
+    match: "_"
+    replace: "-"
+    to: mangled-package-version
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/qt/qtremoteobjects
+      tag: v${{vars.mangled-package-version}}
+      expected-commit: d75e657ef98ed4f66e9336140d60685419920652
+
+  - uses: cmake/configure
+
+  - uses: cmake/build
+
+  - uses: cmake/install
+
+  - uses: strip
+
+update:
+  enabled: true
+  github:
+    identifier: qt/qtremoteobjects
+    use-tag: true
+    strip-prefix: v
+  ignore-regex-patterns:
+    - 'rc\d+$'
+    - 'beta\d+$'
+
+subpackages:
+  - name: ${{package.name}}-dev
+    description: ${{package.name}} development libraries and headers
+    pipeline:
+      - uses: split/dev
+    test:
+      pipeline:
+        - uses: test/tw/ldd-check
+        - uses: test/pkgconf
+
+test:
+  pipeline:
+    - uses: test/tw/ldd-check
+    - uses: test/pkgconf
