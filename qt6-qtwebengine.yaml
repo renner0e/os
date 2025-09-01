@@ -1,6 +1,6 @@
 package:
   name: qt6-qtwebengine
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtwebengine
   copyright:
@@ -15,7 +15,8 @@ environment:
       - libglvnd-dev
       - qt6-qtbase-dev
      # - libxkbcommon-dev
-     # - qt6-qtdeclarative-dev
+      - qt6-qtdeclarative-dev
+      - qt6-qtshadertools-dev
      # - qt6-qtconnectivity-dev
       - libpng-dev
       - tiff-dev
@@ -23,6 +24,17 @@ environment:
       - icu-dev
       - opus-dev
       - libva-dev
+      - libvpx-dev
+      - libpng-dev
+      - tiff-dev
+      - python3-dev
+      - perl-dev
+      - flex
+      - bison
+      - gperf
+      - dbus-dev
+      - nss
+      - fontconfig-dev
 
 var-transforms:
   - from: ${{package.version}}
@@ -35,9 +47,29 @@ pipeline:
     with:
       repository: https://github.com/qt/qtwebengine
       tag: v${{vars.mangled-package-version}}
-      expected-commit: d0012809afa1ca30210948d281f48fbc7160fc0c
+      expected-commit: 997e3a38136b7cd69b9a79d5cd7a77448c9cfb33
+      recurse-submodules: true
+
+  #- runs: exit 1
 
   - uses: cmake/configure
+    with:
+      opts: |
+        -DQT_FEATURE_webengine_system_alsa=ON \
+        -DQT_FEATURE_webengine_system_ffmpeg=ON \
+        -DQT_FEATURE_webengine_system_icu=ON \
+        -DQT_FEATURE_webengine_system_libevent=ON \
+        -DQT_FEATURE_webengine_system_libpci=ON \
+        -DQT_FEATURE_webengine_system_libpng=ON \
+        -DQT_FEATURE_webengine_system_libwebp=ON \
+        -DQT_FEATURE_webengine_system_libxml=ON \
+        -DQT_FEATURE_webengine_system_minizip=ON \
+        -DQT_FEATURE_webengine_system_opus=ON \
+        -DQT_FEATURE_webengine_system_pulseaudio=ON \
+        -DQT_FEATURE_webengine_system_zlib=ON \
+        -DQT_FEATURE_webengine_proprietary_codecs=ON \
+        -DQT_FEATURE_webengine_kerberos=ON \
+        -DQT_FEATURE_webengine_webrtc_pipewire=ON
 
   - uses: cmake/build
 
