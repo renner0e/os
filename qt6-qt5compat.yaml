@@ -15,6 +15,12 @@ environment:
       - libglvnd-dev
       - qt6-qtbase-dev
 
+var-transforms:
+  - from: ${{package.version}}
+    match: "_"
+    replace: "-"
+    to: mangled-package-version
+
 pipeline:
   - uses: git-checkout
     with:
