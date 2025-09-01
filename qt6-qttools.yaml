@@ -1,6 +1,6 @@
 package:
   name: qt6-qttools
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtshadertools
   copyright:
@@ -28,7 +28,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qttools
       tag: v${{vars.mangled-package-version}}
-      expected-commit: 9e8f157b49c78c05abf8fa87da21e04cdf09780c
+      expected-commit: f117f860edcbe49a38275bfe35d3573614be6107
       recurse-submodules: true # we need qlitehtml
 
 

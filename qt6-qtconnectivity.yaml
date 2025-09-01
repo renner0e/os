@@ -1,6 +1,6 @@
 package:
   name: qt6-qtconnectivity
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtconnectivity
   copyright:
@@ -26,7 +26,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qtconnectivity
       tag: v${{vars.mangled-package-version}}
-      expected-commit: eaa05d542497455d7f88ff72d2f6122895931d34
+      expected-commit: 05f84e78a06f8a37819e40885b8fa90553410560
 
   - uses: cmake/configure
 

@@ -1,6 +1,6 @@
 package:
   name: qt6-qtwayland
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtwayland
   copyright:
@@ -29,7 +29,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qtwayland
       tag: v${{vars.mangled-package-version}}
-      expected-commit: b54d446eb64ef23a5e365d5b6ff6116c3a5b6051
+      expected-commit: 516f58e0d2c2daa21a5848108842deeaa44caac7
 
   - uses: cmake/configure
 

@@ -1,6 +1,6 @@
 package:
   name: qt6-qtshadertools
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtshadertools
   copyright:
@@ -27,7 +27,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qtshadertools
       tag: v${{vars.mangled-package-version}}
-      expected-commit: 661130571df1a19bd10dd7705fe689cfde835dad
+      expected-commit: e8d800aa5ac2234f493d038591a69b99f2a55ebc
 
   - uses: cmake/configure
 

@@ -1,6 +1,6 @@
 package:
   name: qt6-qtquick3d
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtquick3d
   copyright:
@@ -30,7 +30,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qtquick3d
       tag: v${{vars.mangled-package-version}}
-      expected-commit: 9dbdffb662559841b284df117c6360b0e8e587c8
+      expected-commit: c0e283245d524cde9be26ac8db1621b50e6833ab
 
   - uses: cmake/configure
 

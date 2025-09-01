@@ -1,6 +1,6 @@
 package:
   name: qt6-qtsensors
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtsensors
   copyright:
@@ -29,7 +29,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qtsensors
       tag: v${{vars.mangled-package-version}}
-      expected-commit: ca75c684e7e96081114e82e88109f2528b51be31
+      expected-commit: 605c20999be935ffafee1830af15eaaf925246ee
 
   - uses: cmake/configure
 

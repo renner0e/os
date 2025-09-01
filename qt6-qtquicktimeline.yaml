@@ -1,6 +1,6 @@
 package:
   name: qt6-qtquicktimeline
-  version: "6.9.1"
+  version: "6.9.2"
   epoch: 0
   description: qtquicktimeline
   copyright:
@@ -28,7 +28,7 @@ pipeline:
     with:
       repository: https://github.com/qt/qtquicktimeline
       tag: v${{vars.mangled-package-version}}
-      expected-commit: 410381aa0b4d3f810a4c3d737c15315010ad9831
+      expected-commit: ba8f2949f6f64a8bdbfc16f5c4877774eec842b5
 
   - uses: cmake/configure
 
