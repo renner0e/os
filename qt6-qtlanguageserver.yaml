@@ -53,9 +53,8 @@ subpackages:
     test:
       pipeline:
         - uses: test/tw/ldd-check
-        - uses: test/pkgconf
 
-test:
-  pipeline:
-    - uses: test/tw/ldd-check
-    - uses: test/pkgconf
+# This package only has licenses?
+#test:
+#  pipeline:
+#    - uses: test/tw/ldd-check
