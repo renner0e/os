@@ -17,6 +17,7 @@ environment:
       - libxkbcommon-dev
       - qt6-qtdeclarative-dev
       - qt6-qtconnectivity-dev
+      - qt6-qtwebsockets-dev
 
 var-transforms:
   - from: ${{package.version}}
