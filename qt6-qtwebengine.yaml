@@ -35,6 +35,9 @@ environment:
       - dbus-dev
       - nss
       - fontconfig-dev
+      - harfbuzz-dev
+      - glib-dev
+      - py3-html5lib
 
 var-transforms:
   - from: ${{package.version}}
