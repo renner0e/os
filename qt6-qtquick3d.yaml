@@ -18,6 +18,8 @@ environment:
       - qt6-qtdeclarative-dev
       - qt6-qtshadertools-dev
       - qt6-qtquicktimeline-dev
+      - clang
+      - vulkan-headers
 
 var-transforms:
   - from: ${{package.version}}
@@ -31,8 +33,15 @@ pipeline:
       repository: https://github.com/qt/qtquick3d
       tag: v${{vars.mangled-package-version}}
       expected-commit: c0e283245d524cde9be26ac8db1621b50e6833ab
+      recurse-submodules: true
 
   - uses: cmake/configure
+    with:
+      opts: |
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_CXX_FLAGS="-g1 -flto=auto" \
+        -DCMAKE_C_FLAGS="-g1 -flto=auto"
 
   - uses: cmake/build
 
