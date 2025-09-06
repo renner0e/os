@@ -6,9 +6,6 @@ package:
   copyright:
     - license: LGPL-3.0-or-later
 
-vars:
-  llvm-vers: 19
-
 environment:
   contents:
     packages:
@@ -23,10 +20,8 @@ environment:
       - python3-dev
       - vulkan-headers
 
-      - clang-${{vars.llvm-vers}}
-      - clang-${{vars.llvm-vers}}-extras
-      - llvm-${{vars.llvm-vers}}
-      - llvm-${{vars.llvm-vers}}-dev
+  environment:
+    GCC_SPEC_FILE: no-hardening.spec
 
 var-transforms:
   - from: ${{package.version}}
@@ -41,20 +36,10 @@ pipeline:
       tag: v${{vars.mangled-package-version}}
       expected-commit: b653aebb2175203d86199b1d320fd10f939df3fc
 
-#  - uses: cmake/configure
-#
-#  - uses: cmake/build
-#
-#  - uses: cmake/install
-
-  - runs: |
-      ln -s /usr/lib/llvm-19/lib/LLVMgold.so /usr/lib/ # I cannot convince ld to find this here
-      # Needed to find our llvm libs
-      export CXXFLAGS="$CXXFLAGS -I/usr/lib/llvm-${{vars.llvm-vers}}/include"
-      export CC=clang
-      export CXX=clang++
-
-      cmake -B build -G Ninja -Wno-dev \
+  - uses: cmake/configure
+    with:
+      opts: |
+        -DINSTALL_BINDIR=lib/qt6/bin \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
@@ -69,8 +54,9 @@ pipeline:
         -DQT_FEATURE_journald=OFF \
         -DQT_FEATURE_reduce_relocations=OFF
 
-      cmake --build build
-      DESTDIR="${{targets.destdir}}" cmake --install build
+  - uses: cmake/build
+
+  - uses: cmake/install
 
   - uses: strip
 

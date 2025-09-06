@@ -11,17 +11,12 @@ package:
     cpu: 16
     memory: 16Gi
 
-vars:
-  llvm-vers: 19
-
 environment:
   contents:
     packages:
       - bison
       - build-base
       - busybox
-      - clang-${{vars.llvm-vers}}
-      - clang-${{vars.llvm-vers}}-extras
       - cmake
       - cups-dev
       - dbus-dev
@@ -38,8 +33,6 @@ environment:
       - libxkbcommon
       - libxkbcommon-dev
       - libxxf86vm-dev
-      - llvm-${{vars.llvm-vers}}
-      - llvm-${{vars.llvm-vers}}-dev
       - mesa
       - mesa-dev
       - mesa-egl
@@ -49,6 +42,11 @@ environment:
       - py3-pip
       - samurai
       - wolfi-base
+      - py3-html5lib
+      - vulkan-headers
+
+  environment:
+    GCC_SPEC_FILE: no-hardening.spec
 
 var-transforms:
   - from: ${{package.version}}
@@ -63,17 +61,10 @@ pipeline:
       tag: v${{vars.mangled-package-version}}
       expected-commit: 6f0d27d2e4ba5fa6562f738aaaf8eaf98ebf51e7
 
-  - runs: |
-      pip install html5lib
-
-  - runs: |
-      ln -s /usr/lib/llvm-19/lib/LLVMgold.so /usr/lib/ # I cannot convince ld to find this here
-      # Needed to find our llvm libs
-      export CXXFLAGS="$CXXFLAGS -I/usr/lib/llvm-${{vars.llvm-vers}}/include"
-      export CC=clang
-      export CXX=clang++
-
-      cmake -B build -G Ninja -Wno-dev \
+  - uses: cmake/configure
+    with:
+      opts: |
+        -DINSTALL_BINDIR=lib/qt6/bin \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
@@ -86,12 +77,11 @@ pipeline:
         -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \
         -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
         -DQT_FEATURE_journald=OFF \
-        -DQT_FEATURE_reduce_relocations=OFF \
-        -DQT_FEATURE_vulkan=ON \
-        -DQT_FEATURE_wayland=ON
+        -DQT_FEATURE_reduce_relocations=OFF
 
-      cmake --build build
-      DESTDIR="${{targets.destdir}}" cmake --install build
+  - uses: cmake/build
+
+  - uses: cmake/install
 
   - uses: strip
 
