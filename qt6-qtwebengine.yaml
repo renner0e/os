@@ -14,10 +14,8 @@ environment:
       - cmake
       - libglvnd-dev
       - qt6-qtbase-dev
-     # - libxkbcommon-dev
       - qt6-qtdeclarative-dev
       - qt6-qtshadertools-dev
-     # - qt6-qtconnectivity-dev
       - libpng-dev
       - tiff-dev
       - re2-dev
@@ -52,8 +50,6 @@ pipeline:
       tag: v${{vars.mangled-package-version}}
       expected-commit: 997e3a38136b7cd69b9a79d5cd7a77448c9cfb33
       recurse-submodules: true
-
-  #- runs: exit 1
 
   - uses: cmake/configure
     with:
