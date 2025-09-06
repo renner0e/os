@@ -21,6 +21,7 @@ environment:
       - libxkbcommon-dev
       - mesa-dev
       - python3-dev
+      - vulkan-headers
 
       - clang-${{vars.llvm-vers}}
       - clang-${{vars.llvm-vers}}-extras

@@ -87,6 +87,7 @@ pipeline:
         -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
         -DQT_FEATURE_journald=OFF \
         -DQT_FEATURE_reduce_relocations=OFF \
+        -DQT_FEATURE_vulkan=ON \
         -DQT_FEATURE_wayland=ON
 
       cmake --build build
