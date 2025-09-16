@@ -54,8 +54,8 @@ pipeline:
         -DENABLE_GPGME=OFF \
         -DENABLE_LIBCURL=OFF \
         -DCMAKE_BUILD_TYPE=Release \
-        -DENABLE_QT5=OFF \
-        -DENABLE_QT6=OFF \
+        -DENABLE_QT5=ON \
+        -DENABLE_QT6=ON \
         -DBUILD_MANUAL_TESTS=OFF \
         -DBUILD_CPP_TESTS=OFF \
         -DBUILD_CPP_TESTS=OFF \

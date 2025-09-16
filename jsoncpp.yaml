@@ -12,6 +12,9 @@ environment:
       - build-base
       - busybox
 
+  environment:
+    GCC_SPEC_FILE: no-hardening.spec
+
 pipeline:
   - uses: git-checkout
     with:
